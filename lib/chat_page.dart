@@ -1,10 +1,41 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application/Models/ChatMessage_entity.dart';
 import 'package:flutter_application/Widget/chat_bubble.dart';
 import 'package:flutter_application/Widget/chat_input.dart';
 
-class Chat extends StatelessWidget {
+// ignore: must_be_immutable
+class Chat extends StatefulWidget {
   const Chat({super.key});
+
+  @override
+  State<Chat> createState() => _ChatState();
+}
+
+class _ChatState extends State<Chat> {
+  List<ChatMessageEntity> messages = [];
+
+  _loadInitialMessages() async {
+    final respone = await rootBundle.loadString("assets/mock_message.json");
+    final List<dynamic> decodeList = jsonDecode(respone) as List;
+    // ignore: non_constant_identifier_names
+    final List<ChatMessageEntity> ChatMessages =
+        decodeList.map((e) {
+          return ChatMessageEntity.fromJson(e);
+        }).toList();
+    print(ChatMessages.length);
+    setState(() {
+      messages = ChatMessages;
+    });
+  }
+
+  @override
+  void initState() {
+    _loadInitialMessages();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +62,14 @@ class Chat extends StatelessWidget {
           // items chat
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: messages.length,
               itemBuilder: (context, index) {
                 return ChatBubble(
                   alignment:
-                      index % 2 == 0
-                          ? Alignment.centerLeft
-                          : Alignment.centerRight,
-                  entity: ChatMessageEntity(
-                    id: 01,
-                    text: "Hi Bro",
-                    createAt: DateTime.now().microsecondsSinceEpoch,
-                    author: Author(name: "Hieng"),
-                  ),
+                      messages[index].author.name == "Hieng"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                  entity: messages[index],
                 );
               },
             ),

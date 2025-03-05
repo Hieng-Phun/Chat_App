@@ -27,16 +27,17 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "${entity.text}",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            if (entity.text != null)
+              Text(
+                "${entity.text}",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
             if (entity.imageUrl != null)
-              Image.asset("${entity.imageUrl}", height: 100),
+              Image.asset("${entity.imageUrl}", height: 80),
           ],
         ),
       ),
