@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application/Models/ChatMessage_entity.dart';
+import 'package:flutter_application/utils/spacing.dart';
 
 class ChatBubble extends StatelessWidget {
   final ChatMessageEntity entity;
@@ -27,6 +28,9 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (entity.imageUrl != null)
+              Image.network("${entity.imageUrl}", height: 80),
+            verticalSpacing(10),
             if (entity.text != null)
               Text(
                 "${entity.text}",
@@ -36,8 +40,6 @@ class ChatBubble extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-            if (entity.imageUrl != null)
-              Image.asset("${entity.imageUrl}", height: 80),
           ],
         ),
       ),
