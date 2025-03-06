@@ -4,23 +4,23 @@ class ChatMessageEntity {
   String id;
   String? text;
   String? imageUrl;
-  Author author;
   int createAt;
+  Author author;
 
   ChatMessageEntity({
     required this.id,
     this.text,
-    required this.createAt,
     this.imageUrl,
+    required this.createAt,
     required this.author,
   });
 
   factory ChatMessageEntity.fromJson(Map<String, dynamic> json) {
     return ChatMessageEntity(
       id: json['id'],
+      text: json['text'],
       createAt: json['createAt'],
       author: Author.fromJson(json['author']),
-      text: json['text'],
       imageUrl: json['imageUrl'],
     );
   }

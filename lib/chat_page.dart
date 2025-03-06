@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application/Models/ChatMessage_entity.dart';
+
 import 'package:flutter_application/Widget/chat_bubble.dart';
 import 'package:flutter_application/Widget/chat_input.dart';
 
@@ -17,23 +18,27 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   List<ChatMessageEntity> messages = [];
 
-  _loadInitialMessages() async {
+  _loadEntityMessages() async {
     final respone = await rootBundle.loadString("assets/mock_message.json");
     final List<dynamic> decodeList = jsonDecode(respone) as List;
-    // ignore: non_constant_identifier_names
-    final List<ChatMessageEntity> ChatMessages =
-        decodeList.map((e) {
-          return ChatMessageEntity.fromJson(e);
-        }).toList();
-    print(ChatMessages.length);
+
+    final List<ChatMessageEntity> chatMessages =
+        decodeList.map((e) => ChatMessageEntity.fromJson(e)).toList();
+
     setState(() {
-      messages = ChatMessages;
+      messages = chatMessages;
     });
+    // print(chatMessages.length);
+  }
+
+  onMessageSend(ChatMessageEntity entity) {
+    messages.add(entity);
+    setState(() {});
   }
 
   @override
   void initState() {
-    _loadInitialMessages();
+    _loadEntityMessages();
     super.initState();
   }
 
@@ -43,9 +48,9 @@ class _ChatState extends State<Chat> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(color: Colors.white),
-        backgroundColor: const Color.fromARGB(255, 62, 87, 99),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: TextStyle(color: Colors.black),
         centerTitle: true,
         title: Text("Hi, $username", style: TextStyle(fontSize: 25)),
         actions: [
@@ -75,7 +80,7 @@ class _ChatState extends State<Chat> {
             ),
           ),
           // navabar chat input
-          ChatInput(),
+          ChatInput(onSubmit: onMessageSend),
         ],
       ),
     );

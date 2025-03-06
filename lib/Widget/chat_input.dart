@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/Models/ChatMessage_entity.dart';
 import 'package:flutter_application/utils/brand_colors.dart';
 
 class ChatInput extends StatelessWidget {
-  const ChatInput({super.key});
+  final Function(ChatMessageEntity) onSubmit;
+  ChatInput({super.key, required this.onSubmit});
+
+  final chatMessageController = TextEditingController();
+
+  void onSendButtonPressed() {
+    final newChatMessages = ChatMessageEntity(
+      id: "010",
+      text: chatMessageController.text,
+      createAt: DateTime.now().millisecondsSinceEpoch,
+      author: Author(name: "Hieng"),
+    );
+    onSubmit(newChatMessages);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(30),
-      decoration: BoxDecoration(color: const Color.fromARGB(255, 62, 87, 99)),
+      decoration: BoxDecoration(color: Colors.black),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -17,6 +31,7 @@ class ChatInput extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextField(
+                controller: chatMessageController,
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
                 minLines: 1,
@@ -36,7 +51,12 @@ class ChatInput extends StatelessWidget {
               ),
             ),
           ),
-          Icon(Icons.send, color: Colors.white),
+          IconButton(
+            onPressed: () {
+              onSendButtonPressed();
+            },
+            icon: Icon(Icons.send, color: Colors.white),
+          ),
         ],
       ),
     );
